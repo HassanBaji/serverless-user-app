@@ -1,0 +1,134 @@
+createUser:
+  handler: src/users/useCases/createUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - sqs:SendMessage
+        - sns:Publish
+      Resource:
+        - Fn::GetAtt:
+            - MyAppDatabase
+            - Arn
+        - Fn::ImportValue: my-sns-arn
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    TOPIC_ARN:
+      Fn::ImportValue: my-sns-arn
+
+  events:
+    - http:
+        method: post
+        path: /v1/users
+
+updateUser:
+  handler: src/users/useCases/updateUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+        - sns:Publish
+      Resource:
+        - Fn::GetAtt:
+            - MyAppDatabase
+            - Arn
+        - Fn::ImportValue: my-sns-arn
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    TOPIC_ARN:
+      Fn::ImportValue: my-sns-arn
+  events:
+    - http:
+        method: patch
+        path: /v1/users
+        authorizer:
+          name: PrivateAuthorizer
+          type: COGNITO_USER_POOLS
+          arn:
+            Fn::GetAtt:
+              - CognitoUserPool
+              - Arn
+          claims:
+            - email
+
+uploadProfilePic:
+  handler: src/users/useCases/uploadProfilePic/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+        - s3:PutObjectTagging
+        - s3:PutBucketAcl
+      Resource:
+        - Fn::GetAtt:
+            - imagesBucket
+            - Arn
+
+  environment:
+    BUCKET_NAME:
+      Ref: imagesBucket
+  events:
+    - http:
+        method: post
+        path: /v1/users/pic
+        authorizer:
+          name: PrivateAuthorizer
+          type: COGNITO_USER_POOLS
+          arn:
+            Fn::GetAtt:
+              - CognitoUserPool
+              - Arn
+          claims:
+            - email
+
+getUser:
+  handler: src/users/useCases/getUsers/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource:
+        - Fn::GetAtt:
+            - MyAppDatabase
+            - Arn
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+  events:
+    - http:
+        method: get
+        path: /v1/users
+
+getUserById:
+  handler: src/users/useCases/getUsersById/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - s3:ListObjectsV2
+        - s3:GetObject
+        - s3:ListAllMyBuckets
+        - s3:ListBucket
+        - s3:ListBucketVersions
+        - s3:ListBuckets
+        - s3:ListObjects
+      Resource:
+        - Fn::GetAtt:
+            - MyAppDatabase
+            - Arn
+        - Fn::GetAtt:
+            - imagesBucket
+            - Arn
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    BUCKET_NAME:
+      Ref: imagesBucket
+  events:
+    - http:
+        method: post
+        path: /v1/users/email
+        cors: true

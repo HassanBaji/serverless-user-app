@@ -1,0 +1,23 @@
+Resources:
+  MyEmailSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: MyEmailSQS
+
+  MySlackSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: MySlackSQS
+
+Outputs:
+  MyEmailSQSArn:
+    Value:
+      Ref: MyEmailSQS
+    Export:
+      Name: my-email-sqs-url
+
+  MySlackSQSArn:
+    Value:
+      Ref: MySlackSQS
+    Export:
+      Name: my-slack-sqs-url

@@ -1,0 +1,12 @@
+Resources:
+  MySNS:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: MessagesSNS
+
+Outputs:
+  MySNSArn:
+    Value:
+      Ref: MySNS
+    Export:
+      Name: my-sns-arn

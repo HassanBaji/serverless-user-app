@@ -1,0 +1,43 @@
+sqsEmailListener:
+  handler: src/notifications/sendEmail/handler.handler
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:ReceiveMessage
+        - sqs:DeleteMessage
+        - sns:Subscribe
+      Resource:
+        - Fn::GetAtt:
+            - MyEmailSQS
+            - Arn
+  environment:
+    SQS_QUEUE_URL:
+      Ref: MyEmailSQS
+  events:
+    - sqs:
+        arn:
+          Fn::GetAtt:
+            - MyEmailSQS
+            - Arn
+
+sqsSlackListener:
+  handler: src/notifications/sendSlack/handler.handler
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:ReceiveMessage
+        - sqs:DeleteMessage
+        - sns:Subscribe
+      Resource:
+        - Fn::GetAtt:
+            - MySlackSQS
+            - Arn
+  environment:
+    SQS_QUEUE_URL:
+      Ref: MySlackSQS
+  events:
+    - sqs:
+        arn:
+          Fn::GetAtt:
+            - MySlackSQS
+            - Arn

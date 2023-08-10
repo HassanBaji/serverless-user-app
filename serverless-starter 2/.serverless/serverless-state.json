@@ -1,0 +1,332 @@
+{
+  "service": {
+    "service": "calo-serverless-starter",
+    "serviceObject": {
+      "name": "calo-serverless-starter"
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs16.x",
+      "stage": "dev",
+      "versionFunctions": false,
+      "environment": {
+        "STAGE": "dev",
+        "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+        "NODE_OPTIONS": "--enable-source-maps --stack-trace-limit=1000",
+        "IS_PROD": {
+          "Fn::If": [
+            "IS_PROD",
+            "true",
+            "false"
+          ]
+        },
+        "IS_DEV": {
+          "Fn::If": [
+            "IS_DEV",
+            "true",
+            "false"
+          ]
+        },
+        "POWERTOOLS_SERVICE_NAME": "calo-serverless-starter",
+        "LOG_LEVEL": {
+          "Fn::If": [
+            "IS_PROD",
+            "ERROR",
+            "INFO"
+          ]
+        },
+        "POWERTOOLS_LOGGER_LOG_EVENT": {
+          "Fn::If": [
+            "IS_PROD",
+            "false",
+            "true"
+          ]
+        },
+        "POWERTOOLS_LOGGER_SAMPLE_RATE": {
+          "Fn::If": [
+            "IS_PROD",
+            "0.25",
+            "1"
+          ]
+        },
+        "POWERTOOLS_TRACE_ENABLED": "true",
+        "POWERTOOLS_TRACER_CAPTURE_HTTPS_REQUESTS": "true",
+        "POWERTOOLS_TRACER_CAPTURE_RESPONSE": "true",
+        "POWERTOOLS_TRACER_CAPTURE_ERROR": "true",
+        "POWERTOOLS_METRICS_NAMESPACE": "Calo"
+      },
+      "tags": {
+        "service-name": "calo-serverless-starter"
+      },
+      "stackTags": {
+        "service-name": "calo-serverless-starter"
+      },
+      "architecture": "x86_64",
+      "timeout": 29,
+      "apiGateway": {
+        "metrics": true,
+        "shouldStartNameWithService": true
+      },
+      "logRetentionInDays": 90,
+      "tracing": {
+        "lambda": true,
+        "apiGateway": true
+      },
+      "logs": {
+        "restApi": true
+      },
+      "region": "us-east-1",
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            },
+            "Export": {
+              "Name": "sls-calo-serverless-starter-dev-ServerlessDeploymentBucketName"
+            }
+          }
+        },
+        "Conditions": {
+          "IS_PROD": {
+            "Fn::Equals": [
+              "dev",
+              "prod"
+            ]
+          },
+          "IS_DEV": {
+            "Fn::Equals": [
+              "dev",
+              "dev"
+            ]
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      }
+    },
+    "custom": {
+      "defaultStage": "dev",
+      "esbuild": {
+        "bundle": true,
+        "minify": true,
+        "sourcemap": true,
+        "sourcesContent": false,
+        "exclude": [
+          "aws-sdk"
+        ],
+        "target": "node16",
+        "platform": "node",
+        "concurrency": 10
+      }
+    },
+    "plugins": [
+      "serverless-esbuild",
+      "serverless-iam-roles-per-function"
+    ],
+    "pluginsData": {},
+    "functions": {},
+    "resources": {
+      "Conditions": {
+        "IS_PROD": {
+          "Fn::Equals": [
+            "dev",
+            "prod"
+          ]
+        },
+        "IS_DEV": {
+          "Fn::Equals": [
+            "dev",
+            "dev"
+          ]
+        }
+      },
+      "Resources": {},
+      "Outputs": {}
+    },
+    "configValidationMode": "warn",
+    "serviceFilename": "serverless.ts",
+    "initialServerlessConfig": {
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "package": {
+        "individually": true,
+        "artifactsS3KeyDirname": "serverless/calo-serverless-starter/dev/code-artifacts"
+      },
+      "custom": {
+        "$ref": "$[\"service\"][\"custom\"]"
+      },
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "resources": {
+        "$ref": "$[\"service\"][\"resources\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "service": "calo-serverless-starter"
+    },
+    "layers": {},
+    "isDashboardMonitoringPreconfigured": false
+  },
+  "package": {
+    "individually": true,
+    "artifactDirectoryName": "serverless/calo-serverless-starter/dev/1691496084462-2023-08-08T12:01:24.462Z",
+    "artifact": ""
+  }
+}

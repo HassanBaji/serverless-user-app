@@ -1,0 +1,28 @@
+Resources:
+  imagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: hassanbajigloballyuniquebucketforcaloapp
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: FALSE
+        BlockPublicPolicy: FALSE
+        IgnorePublicAcls: FALSE
+        RestrictPublicBuckets: FALSE
+
+  imagesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: imagesBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal: "*"
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:PutObjectTagging
+
+            Resource:
+              Fn::Sub: "arn:aws:s3:::${imagesBucket}/*"

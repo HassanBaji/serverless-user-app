@@ -1,0 +1,44 @@
+loginUser:
+  handler: src/authorization/login.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+      Resource:
+        - Fn::GetAtt:
+            - CognitoUserPool
+            - Arn
+  environment:
+    USER_POOL_ID:
+      Ref: CognitoUserPool
+    USER_POOL_CLIENT_ID:
+      Ref: CognitoUserPoolClient
+  events:
+    - http:
+        path: user/login
+        method: post
+        cors: true
+
+registerUser:
+  handler: src/authorization/register.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+      Resource:
+        - Fn::GetAtt:
+            - CognitoUserPool
+            - Arn
+  environment:
+    USER_POOL_ID:
+      Ref: CognitoUserPool
+    USER_POOL_CLIENT_ID:
+      Ref: CognitoUserPoolClient
+  events:
+    - http:
+        path: user/signup
+        method: post
